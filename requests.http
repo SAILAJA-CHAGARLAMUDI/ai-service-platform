@@ -1,0 +1,13 @@
+### Get all service requests
+GET http://localhost:8080/api/service-requests
+
+### Create service request
+POST http://localhost:8080/api/service-requests
+Content-Type: application/json
+
+{
+  "title": "Database connection issue",
+  "description": "Unable to connect to production database",
+  "priority": "HIGH",
+  "status": "OPEN"
+}
