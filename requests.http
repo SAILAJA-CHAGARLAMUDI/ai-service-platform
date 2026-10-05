@@ -66,8 +66,30 @@ Content-Type: application/json
   "status": "OPEN"
 }
 
+### Missing priority - Test malformed json
+POST http://localhost:8080/api/service-requests
+Content-Type: application/json
+
+{
+  "title": "Broken JSON"
+  "description": "Missing comma"
+}
+
+### Malformed JSON
+POST http://localhost:8080/api/service-requests
+Content-Type: application/json
+
+{
+  "title": "Database issue",
+  "description": "Testing malformed JSON",
+  "priority": "HIGH",
+  "status": "OPEN"
+
 ### Get service request
 GET http://localhost:8080/api/service-requests/1
+
+### Get service request - Test non existence id
+GET http://localhost:8080/api/service-requests/999999
 
 ### Update Service Request
 PUT http://localhost:8080/api/service-requests/1
