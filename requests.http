@@ -23,6 +23,49 @@ Content-Type: application/json
   "status": "OPEN"
 }
 
+### Create another request
+POST http://localhost:8080/api/service-requests
+Content-Type: application/json
+
+{
+  "title": "API performance issue",
+  "description": "API response time is above the expected threshold",
+  "priority": "CRITICAL",
+  "status": "IN_PROGRESS"
+}
+
+### Invalid priority
+POST http://localhost:8080/api/service-requests
+Content-Type: application/json
+
+{
+  "title": "Invalid priority test",
+  "description": "Testing enum validation",
+  "priority": "SUPER_HIGH",
+  "status": "OPEN"
+}
+
+### Invalid status
+POST http://localhost:8080/api/service-requests
+Content-Type: application/json
+
+{
+  "title": "Invalid status test",
+  "description": "Testing enum validation",
+  "priority": "HIGH",
+  "status": "PENDING"
+}
+
+### Missing priority
+POST http://localhost:8080/api/service-requests
+Content-Type: application/json
+
+{
+  "title": "Missing priority test",
+  "description": "Testing validation",
+  "status": "OPEN"
+}
+
 ### Get service request
 GET http://localhost:8080/api/service-requests/1
 

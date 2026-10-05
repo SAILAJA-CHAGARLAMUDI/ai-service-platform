@@ -1,6 +1,10 @@
 package com.sailaja.aiserviceplatform.entity;
 
 import jakarta.persistence.*;
+import com.sailaja.aiserviceplatform.enums.Priority;
+import com.sailaja.aiserviceplatform.enums.ServiceRequestStatus;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 @Entity
 @Table(name = "service_requests")
@@ -15,9 +19,11 @@ public class ServiceRequest {
 
         private String description;
 
-        private String priority;
+        @Enumerated(EnumType.STRING)
+        private Priority priority;
 
-        private String status;
+        @Enumerated(EnumType.STRING)
+        private ServiceRequestStatus status;
 
         public ServiceRequest() {
         }
@@ -42,19 +48,19 @@ public class ServiceRequest {
             this.description = description;
         }
 
-        public String getPriority() {
+        public Priority  getPriority() {
             return priority;
         }
 
-        public void setPriority(String priority) {
+        public void setPriority(Priority  priority) {
             this.priority = priority;
         }
 
-        public String getStatus() {
+        public ServiceRequestStatus  getStatus() {
             return status;
         }
 
-        public void setStatus(String status) {
+        public void setStatus(ServiceRequestStatus  status) {
             this.status = status;
         }
 }

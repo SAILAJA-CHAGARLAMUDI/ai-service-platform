@@ -1,12 +1,13 @@
 package com.sailaja.aiserviceplatform.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import com.sailaja.aiserviceplatform.enums.Priority;
+import com.sailaja.aiserviceplatform.enums.ServiceRequestStatus;
 
 public record ServiceRequestResponse (
         Long id,
         String title,
         String description,
-        String priority,
-        String status
-){
+        Priority priority,
+        ServiceRequestStatus status
+) {
 }

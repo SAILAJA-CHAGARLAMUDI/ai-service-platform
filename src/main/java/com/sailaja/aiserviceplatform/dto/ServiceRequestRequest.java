@@ -1,6 +1,9 @@
 package com.sailaja.aiserviceplatform.dto;
 
+import com.sailaja.aiserviceplatform.enums.Priority;
+import com.sailaja.aiserviceplatform.enums.ServiceRequestStatus;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record ServiceRequestRequest (
 
@@ -10,10 +13,10 @@ public record ServiceRequestRequest (
         @NotBlank(message = "Description is required")
         String description,
 
-        @NotBlank(message = "Priority is required")
-        String priority,
+        @NotNull(message = "Priority is required")
+        Priority priority,
 
-        @NotBlank(message = "Status is required")
-        String status
+        @NotNull(message = "Status is required")
+        ServiceRequestStatus status
 ) {
 }
