@@ -4,10 +4,13 @@ import com.sailaja.aiserviceplatform.dto.ServiceRequestRequest;
 import com.sailaja.aiserviceplatform.dto.ServiceRequestResponse;
 import com.sailaja.aiserviceplatform.entity.ServiceRequest;
 import com.sailaja.aiserviceplatform.repository.ServiceRequestRepository;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import com.sailaja.aiserviceplatform.exception.ResourceNotFoundException;
+import org.springframework.cache.annotation.CacheEvict;
 
 import java.util.List;
+import org.springframework.cache.annotation.Cacheable;
 
 @Service
 public class ServiceRequestService {
@@ -18,6 +21,7 @@ public class ServiceRequestService {
         this.repository = repository;
     }
 
+    @Cacheable(value = "serviceRequests", key = "'all'")
     public List<ServiceRequestResponse> getAllRequests() {
         return repository.findAll()
                 .stream()
@@ -25,6 +29,7 @@ public class ServiceRequestService {
                 .toList();
     }
 
+    @Cacheable(value = "serviceRequests", key = "#id")
     public ServiceRequestResponse getRequestById(Long id) {
         ServiceRequest request = repository.findById(id)
                 .orElseThrow(() ->
@@ -33,6 +38,7 @@ public class ServiceRequestService {
         return toResponse(request);
     }
 
+    @CacheEvict(value = "serviceRequests", key = "'all'")
     public ServiceRequestResponse  createRequest(ServiceRequestRequest request) {
         ServiceRequest entity = new ServiceRequest();
 
@@ -46,6 +52,12 @@ public class ServiceRequestService {
         return toResponse(savedRequest);
     }
 
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "serviceRequests", key = "#id"),
+                    @CacheEvict(value = "serviceRequests", key = "'all'")
+            }
+    )
     public ServiceRequestResponse updateRequest(
             Long id,
             ServiceRequestRequest request) {
@@ -64,6 +76,12 @@ public class ServiceRequestService {
         return toResponse(updatedRequest);
     }
 
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "serviceRequests", key = "#id"),
+                    @CacheEvict(value = "serviceRequests", key = "'all'")
+            }
+    )
     public void deleteRequest(Long id) {
 
         ServiceRequest entity = repository.findById(id)
