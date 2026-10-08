@@ -19,6 +19,8 @@ import com.sailaja.aiserviceplatform.kafka.ServiceRequestEventProducer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -182,7 +184,10 @@ class ServiceRequestServiceTest {
 
         service = new ServiceRequestService(repository, eventProducer);
 
-        ServiceRequest existingRequest = new ServiceRequest();
+        ServiceRequest existingRequest = spy(new ServiceRequest());
+
+        doReturn(1L).when(existingRequest).getId();
+
         existingRequest.setTitle("Old title");
         existingRequest.setDescription("Old description");
         existingRequest.setPriority(Priority.LOW);
@@ -211,6 +216,18 @@ class ServiceRequestServiceTest {
 
         verify(repository).findById(1L);
         verify(repository).save(existingRequest);
+
+        ArgumentCaptor<ServiceRequestEvent> eventCaptor =
+                ArgumentCaptor.forClass(ServiceRequestEvent.class);
+
+        verify(eventProducer).sendEvent(eventCaptor.capture());
+
+        ServiceRequestEvent event = eventCaptor.getValue();
+
+        assertEquals("SERVICE_REQUEST_UPDATED", event.eventType());
+        assertEquals(1L, event.requestId());
+        assertNotNull(event.timestamp());
+        assertEquals("service-request-service", event.source());
     }
 
     @Test
@@ -259,6 +276,18 @@ class ServiceRequestServiceTest {
 
         verify(repository).findById(1L);
         verify(repository).delete(existingRequest);
+
+        ArgumentCaptor<ServiceRequestEvent> eventCaptor =
+                ArgumentCaptor.forClass(ServiceRequestEvent.class);
+
+        verify(eventProducer).sendEvent(eventCaptor.capture());
+
+        ServiceRequestEvent event = eventCaptor.getValue();
+
+        assertEquals("SERVICE_REQUEST_DELETED", event.eventType());
+        assertEquals(1L, event.requestId());
+        assertNotNull(event.timestamp());
+        assertEquals("service-request-service", event.source());
     }
 
     @Test

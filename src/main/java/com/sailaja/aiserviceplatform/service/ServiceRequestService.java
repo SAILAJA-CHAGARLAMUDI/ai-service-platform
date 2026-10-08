@@ -91,6 +91,15 @@ public class ServiceRequestService {
 
         ServiceRequest updatedRequest = repository.save(entity);
 
+        ServiceRequestEvent event = new ServiceRequestEvent(
+                "SERVICE_REQUEST_UPDATED",
+                updatedRequest.getId(),
+                LocalDateTime.now(),
+                "service-request-service"
+        );
+
+        eventProducer.sendEvent(event);
+
         return toResponse(updatedRequest);
     }
 
@@ -107,6 +116,15 @@ public class ServiceRequestService {
                         new ResourceNotFoundException("Service request not found with id: " + id));
 
         repository.delete(entity);
+
+        ServiceRequestEvent event = new ServiceRequestEvent(
+                "SERVICE_REQUEST_DELETED",
+                id,
+                LocalDateTime.now(),
+                "service-request-service"
+        );
+
+        eventProducer.sendEvent(event);
     }
 
     private ServiceRequestResponse toResponse(ServiceRequest entity) {
